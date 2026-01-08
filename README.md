@@ -34,6 +34,57 @@ Frontend visuals are the language; the backend only supports storing and sharing
 - ✅ **Therapy Session Support** - Saves session preferences (optional, no medical data)
 - ✅ **User Settings API** - Reduced motion, sound preferences, accessibility flags
 
+## Themes ↔ Features Mapping
+
+Below is how the app embodies your hackathon themes through concrete screens, components, and APIs.
+
+### Theme 1: Emotions speak louder than words
+
+- Visual creation and sharing (no text labels):
+   - [frontend/src/features/emotion/EmotionCanvas.tsx](frontend/src/features/emotion/EmotionCanvas.tsx)
+   - [frontend/src/features/emotion/CreateEmotion.tsx](frontend/src/features/emotion/CreateEmotion.tsx)
+   - [frontend/src/features/emotion/EmotionPost.tsx](frontend/src/features/emotion/EmotionPost.tsx)
+- Silent discovery and viewing:
+   - [frontend/src/features/feed/EmotionFeed.tsx](frontend/src/features/feed/EmotionFeed.tsx)
+   - [frontend/src/features/feed/EmotionDetail.tsx](frontend/src/features/feed/EmotionDetail.tsx)
+- Data + API support for non-verbal posts:
+   - [frontend/src/services/emotionService.ts](frontend/src/services/emotionService.ts)
+   - [frontend/src/services/api.ts](frontend/src/services/api.ts)
+   - [backend/routes/signals.js](backend/routes/signals.js)
+   - [backend/models/EmotionalSignal.js](backend/models/EmotionalSignal.js)
+
+### Theme 2: Silence is also a language
+
+- Intentional quiet spaces in the UI:
+   - [frontend/src/features/silence/SilencePage.tsx](frontend/src/features/silence/SilencePage.tsx)
+   - [frontend/src/features/calm/CalmMode.tsx](frontend/src/features/calm/CalmMode.tsx)
+   - [frontend/src/features/therapy/TherapyPage.tsx](frontend/src/features/therapy/TherapyPage.tsx)
+- Feed with no captions/metrics:
+   - [frontend/src/features/feed/EmotionFeed.tsx](frontend/src/features/feed/EmotionFeed.tsx)
+- Preference-backed accessibility for quiet/low-stimulus modes:
+   - [backend/routes/users.js](backend/routes/users.js)
+   - [frontend/src/features/profile/ProfilePage.tsx](frontend/src/features/profile/ProfilePage.tsx)
+
+### Theme 5: Feelings hidden in patterns
+
+- Pattern-centric visuals and timelines:
+   - [frontend/src/features/history/EmotionHistory.tsx](frontend/src/features/history/EmotionHistory.tsx)
+   - [frontend/src/utils/emotions.ts](frontend/src/utils/emotions.ts)
+   - [frontend/src/features/emotion/EmotionCanvas.tsx](frontend/src/features/emotion/EmotionCanvas.tsx)
+- Schema and storage for visual parameters/pattern types:
+   - [backend/models/Emotion.js](backend/models/Emotion.js)
+   - [backend/models/EmotionalSignal.js](backend/models/EmotionalSignal.js)
+   - [backend/routes/emotions.js](backend/routes/emotions.js)
+
+### Theme 7: Silence speaks what sound cannot
+
+- Guided non-verbal calm/therapy sessions (tones, timers, no narration):
+   - [frontend/src/features/therapy/TherapyPage.tsx](frontend/src/features/therapy/TherapyPage.tsx)
+   - [frontend/src/features/calm/CalmMode.tsx](frontend/src/features/calm/CalmMode.tsx)
+   - [frontend/src/features/silence/SilencePage.tsx](frontend/src/features/silence/SilencePage.tsx)
+- Silent feed reinforcing meaning without words:
+   - [frontend/src/features/feed/EmotionFeed.tsx](frontend/src/features/feed/EmotionFeed.tsx)
+
 ## What We Do NOT Add (Theme Breakers)
 
 ❌ Text posts
