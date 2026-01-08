@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Layers, Heart, History, User, Mic2, Wind } from 'lucide-react';
+import { Layers, Heart, History, User, Mic2, Wind, Volume2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/utils/cn';
 
@@ -9,7 +9,7 @@ const navItems = [
   { path: '/silence', icon: Wind, label: 'Silence' },
   { path: '/therapy', icon: Heart, label: 'Therapy' },
   { path: '/feed', icon: Layers, label: 'Connect' },
-  { path: '/calm', icon: User, label: 'Calm' }, // Placeholder route
+  { path: '/calm', icon: Volume2, label: 'Calm' },
   { path: '/history', icon: History, label: 'History' },
 ];
 

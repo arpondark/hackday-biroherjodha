@@ -76,6 +76,9 @@ export const EmotionCanvas: React.FC<EmotionCanvasProps> = ({
         case 'pulse':
           drawPulse(ctx, width, height, color, time, motionIntensity);
           break;
+        case 'ripples':
+          drawRipples(ctx, width, height, color, time, motionIntensity);
+          break;
       }
 
       animationRef.current = requestAnimationFrame(animate);
@@ -276,5 +279,47 @@ function drawPulse(
   ctx.beginPath();
   ctx.arc(centerX, centerY, pulseSize, 0, Math.PI * 2);
   ctx.fillStyle = hexToRgba(color, 0.8);
+  ctx.fill();
+}
+
+function drawRipples(
+  ctx: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  color: string,
+  time: number,
+  intensity: number
+) {
+  const centerX = width / 2;
+  const centerY = height / 2;
+  const rippleCount = 6;
+  const maxRadius = Math.min(width, height) / 2;
+
+  for (let i = 0; i < rippleCount; i++) {
+    const phase = (time * intensity + i * 0.5) % 3;
+    const radius = (phase / 3) * maxRadius;
+    const alpha = Math.max(0, 1 - phase / 3) * 0.6;
+
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+    ctx.strokeStyle = hexToRgba(color, alpha);
+    ctx.lineWidth = 3 * (1 - phase / 3);
+    ctx.stroke();
+
+    // Inner glow
+    const gradient = ctx.createRadialGradient(
+      centerX, centerY, radius * 0.8,
+      centerX, centerY, radius
+    );
+    gradient.addColorStop(0, hexToRgba(color, 0));
+    gradient.addColorStop(1, hexToRgba(color, alpha * 0.3));
+    ctx.fillStyle = gradient;
+    ctx.fill();
+  }
+
+  // Center point
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, 8, 0, Math.PI * 2);
+  ctx.fillStyle = hexToRgba(color, 0.9);
   ctx.fill();
 }
