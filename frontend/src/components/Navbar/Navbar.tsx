@@ -10,7 +10,6 @@ const navItems = [
   { path: '/experiments', icon: FlaskConical, label: 'Lab' },
   { path: '/therapy', icon: Heart, label: 'Therapy' },
   { path: '/feed', icon: Layers, label: 'Connect' },
-  { path: '/calm', icon: User, label: 'Calm' }, // Placeholder route
   { path: '/history', icon: History, label: 'History' },
 ];
 
