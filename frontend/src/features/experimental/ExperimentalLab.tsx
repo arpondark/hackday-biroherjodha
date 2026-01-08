@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Wind, Eye, Music, Ghost, Waves, Users, Shuffle, 
-  Pause, CircleDashed, Info, ChevronLeft
+  CircleDashed, Info, ChevronLeft
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BreathingCanvas } from '../emotion/BreathingCanvas';
-import { SilenceZonesCanvas } from '../emotion/SilenceZonesCanvas';
+
 import { HiddenPatternsCanvas } from '../emotion/HiddenPatternsCanvas';
 import { ThoughtMusicCanvas } from '../emotion/ThoughtMusicCanvas';
 import { ExperimentalCanvas } from '../emotion/ExperimentalCanvas';
@@ -15,14 +15,12 @@ import { cn } from '@/utils/cn';
 
 type ExperimentMode = 
   | 'breathing' 
-  | 'silence-zones' 
   | 'hidden-patterns' 
   | 'thought-music'
   | 'echo'
   | 'drift'
   | 'dialogue'
   | 'misinterpret'
-  | 'stillness'
   | 'nocenter';
 
 interface ExperimentInfo {
@@ -41,13 +39,7 @@ const experiments: ExperimentInfo[] = [
     description: 'Colors pulse like breathing based on your emotion. Anxiety quickens, calm deepens.',
     color: '#4A90E2'
   },
-  {
-    id: 'silence-zones',
-    name: 'Silence Zones',
-    icon: Pause,
-    description: 'Approach zones where sound disappears. Visuals sharpen as silence deepens.',
-    color: '#9B59B6'
-  },
+
   {
     id: 'hidden-patterns',
     name: 'Hidden Patterns',
@@ -90,13 +82,7 @@ const experiments: ExperimentInfo[] = [
     description: 'Same pattern, different feeling each time. No two views are alike.',
     color: '#00BCD4'
   },
-  {
-    id: 'stillness',
-    name: 'Stillness Reward',
-    icon: Pause,
-    description: 'Stop moving. Wait. New visuals appear only when completely still.',
-    color: '#8E44AD'
-  },
+
   {
     id: 'nocenter',
     name: 'No Center',
@@ -117,8 +103,7 @@ export const ExperimentalLab: React.FC = () => {
     switch (activeExperiment) {
       case 'breathing':
         return <BreathingCanvas color={selectedColor} />;
-      case 'silence-zones':
-        return <SilenceZonesCanvas color={selectedColor} />;
+
       case 'hidden-patterns':
         return <HiddenPatternsCanvas color={selectedColor} />;
       case 'thought-music':
@@ -131,8 +116,7 @@ export const ExperimentalLab: React.FC = () => {
         return <ExperimentalCanvas color={selectedColor} mode="dialogue" />;
       case 'misinterpret':
         return <ExperimentalCanvas color={selectedColor} mode="misinterpret" />;
-      case 'stillness':
-        return <ExperimentalCanvas color={selectedColor} mode="stillness" />;
+
       case 'nocenter':
         return <ExperimentalCanvas color={selectedColor} mode="nocenter" />;
       default:
@@ -267,13 +251,7 @@ export const ExperimentalLab: React.FC = () => {
                       <p>• Anxiety creates irregular, rapid breathing</p>
                     </>
                   )}
-                  {activeExperiment === 'silence-zones' && (
-                    <>
-                      <p>• Move your cursor toward the quiet zones</p>
-                      <p>• Sound fades as you approach</p>
-                      <p>• Visuals become sharper in deep silence</p>
-                    </>
-                  )}
+
                   {activeExperiment === 'hidden-patterns' && (
                     <>
                       <p>• Look closely at the decorative patterns</p>
@@ -316,13 +294,7 @@ export const ExperimentalLab: React.FC = () => {
                       <p>• Refresh to see a new interpretation</p>
                     </>
                   )}
-                  {activeExperiment === 'stillness' && (
-                    <>
-                      <p>• Stop moving completely</p>
-                      <p>• Wait for new forms to appear</p>
-                      <p>• Patience reveals hidden rewards</p>
-                    </>
-                  )}
+
                   {activeExperiment === 'nocenter' && (
                     <>
                       <p>• There is no focal point</p>
