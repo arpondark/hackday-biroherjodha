@@ -7,6 +7,8 @@ export const emotionColors = {
   love: '#E91E63',
   peace: '#2ECC71',
   neutral: '#95A5A6',
+  anxious: '#FF4444',
+  melancholy: '#4A4A8A',
 } as const;
 
 export type EmotionType = keyof typeof emotionColors;

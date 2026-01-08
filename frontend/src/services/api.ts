@@ -27,10 +27,8 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      window.location.href = '/login';
-    }
+    // Let the app decide how to handle 401s (avoids forced logout on refresh)
+    // AuthProvider will validate and clear storage if needed.
     return Promise.reject(error);
   }
 );

@@ -10,6 +10,7 @@ import { EmotionHistory } from '@/features/history/EmotionHistory';
 import { ProfilePage } from '@/features/profile/ProfilePage';
 import { SilencePage } from '@/features/silence/SilencePage';
 import { EmotionDetail } from '@/features/feed/EmotionDetail';
+import { CalmMode } from '@/features/calm/CalmMode';
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -72,6 +73,14 @@ export const AppRoutes: React.FC = () => {
         element={
           <ProtectedRoute>
             <ProfilePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/calm"
+        element={
+          <ProtectedRoute>
+            <CalmMode />
           </ProtectedRoute>
         }
       />

@@ -28,6 +28,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Hydrate user from localStorage immediately to avoid logout flicker on refresh
+    try {
+      const storedUser = localStorage.getItem('user');
+      const token = localStorage.getItem('token');
+      if (storedUser && token) {
+        setUser(JSON.parse(storedUser));
+      }
+    } catch (e) {
+      // ignore hydration errors
+    }
     checkAuth();
   }, []);
 
@@ -37,9 +47,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       try {
         const userData = await authService.getCurrentUser();
         setUser(userData);
-      } catch (error) {
+        localStorage.setItem('user', JSON.stringify(userData));
+      } catch (error: any) {
         console.error('Auth check failed:', error);
-        localStorage.removeItem('token');
+        // Only logout on auth errors (401/403)
+        if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          setUser(null);
+        }
+        // If it's a network error or server error, we keep the local user state
+        // This prevents logout on refresh if backend is temporarily unreachable
       }
     }
     setLoading(false);
@@ -49,6 +67,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const { token, user: userData } = await authService.googleLogin(credential);
       localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(userData));
       setUser(userData);
     } catch (error) {
       console.error('Login failed:', error);
@@ -58,6 +77,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = () => {
     authService.logout();
+    localStorage.removeItem('user');
     setUser(null);
   };
 
