@@ -283,27 +283,44 @@ export const CreateEmotion: React.FC = () => {
             <>
               {/* Color Grid */}
               <div className="space-y-3">
-                <label className="text-sm font-medium text-white/80">Base Color</label>
-                <div className="grid grid-cols-6 gap-3">
+                <label className="text-sm font-medium text-white/80">
+                  Base Color
+                  {selectedColor && (
+                    <span className="ml-2 text-accent-primary capitalize">
+                      {Object.keys(emotionColors).find(key => emotionColors[key as keyof typeof emotionColors] === selectedColor)}
+                    </span>
+                  )}
+                </label>
+                <div className="grid grid-cols-5 gap-3">
                   {Object.entries(emotionColors).map(([name, color]) => (
                     <button
                       key={name}
                       onClick={() => setSelectedColor(color)}
-                      className={cn(
-                        'w-full aspect-square rounded-full transition-all duration-300 relative',
-                        selectedColor === color ? 'scale-110 ring-2 ring-offset-2 ring-offset-black ring-white' : 'hover:scale-105 hover:opacity-80'
-                      )}
-                      style={{ backgroundColor: color }}
+                      className="group flex flex-col items-center gap-2"
                       title={name}
                     >
-                       {selectedColor === color && (
-                          <motion.div 
-                            layoutId="check"
-                            className="absolute inset-0 flex items-center justify-center text-black/50"
-                          >
-                            <div className="w-2 h-2 bg-white rounded-full" />
-                          </motion.div>
-                       )}
+                      <div
+                        className={cn(
+                          'w-full aspect-square rounded-full transition-all duration-300 relative',
+                          selectedColor === color ? 'scale-110 ring-2 ring-offset-2 ring-offset-black ring-white' : 'group-hover:scale-105 group-hover:opacity-80'
+                        )}
+                        style={{ backgroundColor: color }}
+                      >
+                         {selectedColor === color && (
+                            <motion.div 
+                              layoutId="check"
+                              className="absolute inset-0 flex items-center justify-center text-black/50"
+                            >
+                              <div className="w-2 h-2 bg-white rounded-full" />
+                            </motion.div>
+                         )}
+                      </div>
+                      <span className={cn(
+                        "text-xs capitalize transition-colors",
+                        selectedColor === color ? "text-white font-medium" : "text-white/50 group-hover:text-white/80"
+                      )}>
+                        {name}
+                      </span>
                     </button>
                   ))}
                 </div>
