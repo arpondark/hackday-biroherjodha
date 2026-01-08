@@ -1,0 +1,14 @@
+{
+  "name": "resonance-main",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "concurrently \"pnpm run server\" \"pnpm run client\"",
+    "server": "pnpm -C backend run dev",
+    "client": "pnpm -C frontend run dev",
+    "install:all": "pnpm install && pnpm -C backend install && pnpm -C frontend install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

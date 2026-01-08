@@ -1,0 +1,108 @@
+############################
+# Environment Variables
+############################
+.env
+.env.*
+!.env.example
+
+############################
+# Node.js
+############################
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+############################
+# Backend (Express / Node)
+############################
+dist/
+build/
+coverage/
+.logs/
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+############################
+# Frontend (React / Vite / Next)
+############################
+# React build
+build/
+
+# Vite
+.vite/
+
+# Next.js
+.next/
+out/
+
+# CRA
+.cache/
+
+############################
+# MongoDB
+############################
+data/
+dump/
+*.bson
+*.json.bson
+
+############################
+# TypeScript
+############################
+*.tsbuildinfo
+
+############################
+# Testing
+############################
+coverage/
+.nyc_output/
+
+############################
+# IDEs & Editors
+############################
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+############################
+# OS Files
+############################
+.DS_Store
+Thumbs.db
+desktop.ini
+
+############################
+# Docker
+############################
+docker-compose.override.yml
+*.local
+
+############################
+# Logs & Runtime
+############################
+logs/
+*.log
+
+############################
+# Temporary Files
+############################
+tmp/
+temp/
+.cache/
+
+############################
+# Misc
+############################
+*.swp
+*.bak
+*.old
