@@ -177,7 +177,7 @@ export const TherapyPage: React.FC = () => {
   const progress = ((duration - timeLeft) / duration) * 100;
 
   return (
-    <div className="h-full w-full flex flex-col md:flex-row">
+    <div className="min-h-screen w-full flex flex-col md:flex-row pt-32">
       {/* Canvas Area */}
       <div className="flex-1 relative">
         <EmotionCanvas

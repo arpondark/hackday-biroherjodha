@@ -1,15 +1,16 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Home, Layers, Heart, History, User } from 'lucide-react';
+import { Layers, Heart, History, User, Mic2, Wind } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/utils/cn';
 
 const navItems = [
-  { path: '/dashboard', icon: Home, label: 'Dashboard' },
-  { path: '/feed', icon: Layers, label: 'Feed' },
+  { path: '/dashboard', icon: Mic2, label: 'Express' },
+  { path: '/silence', icon: Wind, label: 'Silence' },
   { path: '/therapy', icon: Heart, label: 'Therapy' },
+  { path: '/feed', icon: Layers, label: 'Connect' },
+  { path: '/calm', icon: User, label: 'Calm' }, // Placeholder route
   { path: '/history', icon: History, label: 'History' },
-  { path: '/profile', icon: User, label: 'Profile' },
 ];
 
 export const Navbar: React.FC = () => {
@@ -21,87 +22,45 @@ export const Navbar: React.FC = () => {
   }
 
   return (
-    <>
-      {/* Desktop Navbar - Left Side */}
-      <nav className="hidden md:flex fixed left-0 top-0 h-full w-20 glass-effect flex-col items-center py-8 gap-4 z-50">
-        <div className="mb-8">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-accent-primary to-accent-secondary" />
-        </div>
-        
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = location.pathname === item.path;
-          
-          return (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={cn(
-                'nav-item group relative',
-                isActive && 'active'
-              )}
-            >
-              {isActive && (
-                <motion.div
-                  layoutId="navbar-indicator"
-                  className="absolute inset-0 bg-gradient-to-br from-accent-primary/20 to-accent-secondary/20 rounded-xl"
-                  transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
-                />
-              )}
-              <Icon
-                className={cn(
-                  'w-6 h-6 relative z-10 transition-colors',
-                  isActive ? 'text-accent-primary' : 'text-white/60 group-hover:text-white'
-                )}
-              />
-              <span className="text-xs text-white/60 group-hover:text-white relative z-10">
-                {item.label}
-              </span>
-            </NavLink>
-          );
-        })}
-      </nav>
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[#130a2a]/90 backdrop-blur-md border-b border-white/5">
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex flex-col items-center gap-6">
+          {/* Brand */}
+          <div className="text-center">
+            <h1 className="text-3xl font-bold tracking-wider text-white">RESONANCE</h1>
+            <p className="text-xs text-white/40 tracking-widest mt-1 uppercase">Your Daily Emotional Echo — Express, Connect, Remember</p>
+          </div>
 
-      {/* Mobile Navbar - Bottom */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 glass-effect flex items-center justify-around py-4 z-50">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = location.pathname === item.path;
-          
-          return (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={cn(
-                'flex flex-col items-center gap-1 p-2 rounded-xl transition-all relative',
-                isActive && 'active'
-              )}
-            >
-              {isActive && (
-                <motion.div
-                  layoutId="mobile-navbar-indicator"
-                  className="absolute inset-0 bg-gradient-to-br from-accent-primary/20 to-accent-secondary/20 rounded-xl"
-                  transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
-                />
-              )}
-              <Icon
-                className={cn(
-                  'w-6 h-6 relative z-10 transition-colors',
-                  isActive ? 'text-accent-primary' : 'text-white/60'
-                )}
-              />
-              <span
-                className={cn(
-                  'text-xs relative z-10 transition-colors',
-                  isActive ? 'text-white' : 'text-white/60'
-                )}
-              >
-                {item.label}
-              </span>
-            </NavLink>
-          );
-        })}
-      </nav>
-    </>
+          {/* Navigation */}
+          <nav className="flex items-center gap-1 p-1 rounded-full bg-white/5 border border-white/10">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = location.pathname === item.path;
+              
+              return (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  className={({ isActive }) => cn(
+                    'relative px-5 py-2 rounded-full flex items-center gap-2 transition-all duration-300',
+                    isActive ? 'text-white' : 'text-white/60 hover:text-white hover:bg-white/5'
+                  )}
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="nav-pill"
+                      className="absolute inset-0 bg-accent-primary rounded-full shadow-lg shadow-accent-primary/25"
+                      transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
+                  <Icon className="w-4 h-4 relative z-10" />
+                  <span className="text-sm font-medium relative z-10">{item.label}</span>
+                </NavLink>
+              );
+            })}
+          </nav>
+        </div>
+      </div>
+    </header>
   );
 };

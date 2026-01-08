@@ -4,6 +4,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from './providers/AuthProvider';
 import { AppRoutes } from './routes';
 import { Navbar } from '@/components/Navbar';
+import { Footer } from '@/components/Footer/Footer';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 
@@ -14,8 +15,9 @@ function App() {
         <AuthProvider>
           <div className="h-screen w-screen flex overflow-hidden bg-background-darker">
             <Navbar />
-            <main className="flex-1 md:ml-20 mb-20 md:mb-0 overflow-hidden">
+            <main className="flex-1 overflow-y-auto h-full scrollbar-hide">
               <AppRoutes />
+              <Footer />
             </main>
           </div>
         </AuthProvider>
