@@ -5,7 +5,7 @@ import User from '../models/User.js';
 
 const router = express.Router();
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET || 'gfkjkdfhkgjhfdkjghjlfkdhgjkldfglsdfjshfilsuhfisudhfisdffg';
 
 const generateToken = (userId) => {
   return jwt.sign({ userId }, JWT_SECRET, { expiresIn: '7d' });

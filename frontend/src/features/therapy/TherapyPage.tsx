@@ -10,12 +10,65 @@ const durations = [
   { label: '10 min', value: 600 },
 ];
 
+interface FrequencyMode {
+  name: string;
+  frequency: number;
+  color: string;
+  pattern: 'waves' | 'particles' | 'spirals' | 'ripples';
+  description: string;
+  icon: string;
+}
+
+const frequencyModes: FrequencyMode[] = [
+  {
+    name: 'Peace',
+    frequency: 432,
+    color: '#6C63FF',
+    pattern: 'waves',
+    description: 'Natural tuning frequency for inner peace and stress relief',
+    icon: '☮️',
+  },
+  {
+    name: 'Love',
+    frequency: 528,
+    color: '#FF69B4',
+    pattern: 'ripples',
+    description: 'DNA repair frequency for love, healing, and transformation',
+    icon: '💖',
+  },
+  {
+    name: 'Connection',
+    frequency: 639,
+    color: '#50C878',
+    pattern: 'particles',
+    description: 'Harmonizing relationships and enhancing communication',
+    icon: '🤝',
+  },
+  {
+    name: 'Awakening',
+    frequency: 741,
+    color: '#FFB347',
+    pattern: 'spirals',
+    description: 'Awakening intuition and expanding consciousness',
+    icon: '✨',
+  },
+  {
+    name: 'Enlightenment',
+    frequency: 963,
+    color: '#9D84B7',
+    pattern: 'waves',
+    description: 'Highest frequency for spiritual enlightenment and divine connection',
+    icon: '🌟',
+  },
+];
+
 export const TherapyPage: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(300);
   const [timeLeft, setTimeLeft] = useState(duration);
   const [volume, setVolume] = useState(0.5);
   const [isMuted, setIsMuted] = useState(false);
+  const [selectedMode, setSelectedMode] = useState<FrequencyMode>(frequencyModes[0]);
   
   const audioContextRef = useRef<AudioContext | null>(null);
   const oscillatorRef = useRef<OscillatorNode | null>(null);
@@ -51,12 +104,12 @@ export const TherapyPage: React.FC = () => {
 
     const audioContext = audioContextRef.current;
     
-    // Create oscillator for calming frequency (432 Hz)
+    // Create oscillator for selected frequency
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
 
     oscillator.type = 'sine';
-    oscillator.frequency.setValueAtTime(432, audioContext.currentTime);
+    oscillator.frequency.setValueAtTime(selectedMode.frequency, audioContext.currentTime);
     
     gainNode.gain.setValueAtTime(isMuted ? 0 : volume * 0.3, audioContext.currentTime);
 
@@ -84,6 +137,16 @@ export const TherapyPage: React.FC = () => {
       setIsPlaying(true);
       setTimeLeft(duration);
       startSound();
+    }
+  };
+
+  const handleModeChange = (mode: FrequencyMode) => {
+    if (isPlaying) {
+      stopSound();
+      setSelectedMode(mode);
+      setTimeout(() => startSound(), 100);
+    } else {
+      setSelectedMode(mode);
     }
   };
 
@@ -118,9 +181,9 @@ export const TherapyPage: React.FC = () => {
       {/* Canvas Area */}
       <div className="flex-1 relative">
         <EmotionCanvas
-          color="#6C63FF"
-          pattern="pulse"
-          motionIntensity={isPlaying ? 0.3 : 0.1}
+          color={selectedMode.color}
+          pattern={selectedMode.pattern}
+          motionIntensity={isPlaying ? 0.4 : 0.1}
         />
 
         {/* Timer Display */}
@@ -162,8 +225,35 @@ export const TherapyPage: React.FC = () => {
       </div>
 
       {/* Controls Panel */}
-      <div className="w-full md:w-80 glass-effect p-6 space-y-6">
+      <div className="w-full md:w-80 glass-effect p-6 space-y-6 overflow-y-auto">
         <h2 className="text-2xl font-bold gradient-text">Therapy Mode</h2>
+
+        {/* Frequency Mode Selection */}
+        <div className="space-y-3">
+          <label className="text-sm font-medium text-white/80">Frequency Mode</label>
+          <div className="grid grid-cols-2 gap-3">
+            {frequencyModes.map((mode) => (
+              <motion.button
+                key={mode.name}
+                onClick={() => handleModeChange(mode)}
+                className={cn(
+                  'p-3 rounded-xl text-sm font-medium transition-all text-left',
+                  selectedMode.name === mode.name
+                    ? 'bg-gradient-to-r from-accent-primary to-accent-secondary text-white'
+                    : 'glass-effect text-white/80 hover:bg-white/10'
+                )}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-lg">{mode.icon}</span>
+                  <span className="font-semibold">{mode.name}</span>
+                </div>
+                <div className="text-xs opacity-80">{mode.frequency} Hz</div>
+              </motion.button>
+            ))}
+          </div>
+        </div>
 
         {/* Duration Selection */}
         <div className="space-y-3">
@@ -225,13 +315,14 @@ export const TherapyPage: React.FC = () => {
           />
         </div>
 
-        {/* Info */}
+        {/* Mode Info */}
         <div className="pt-4 border-t border-white/10 space-y-4">
           <div>
-            <h3 className="text-sm font-medium text-white/80 mb-2">About Therapy Mode</h3>
+            <h3 className="text-sm font-medium text-white/80 mb-2">
+              {selectedMode.icon} {selectedMode.name} Mode
+            </h3>
             <p className="text-xs text-white/60 leading-relaxed">
-              Experience calming frequencies (432 Hz) combined with slow, gentle visual motion.
-              Perfect for meditation, relaxation, or emotional regulation.
+              {selectedMode.description}
             </p>
           </div>
           

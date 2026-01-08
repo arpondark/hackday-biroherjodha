@@ -4,7 +4,7 @@ import EmotionalSignal from '../models/EmotionalSignal.js';
 
 const router = express.Router();
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET || 'gfkjkdfhkgjhfdkjghjlfkdhgjkldfglsdfjshfilsuhfisudhfisdffg';
 
 const authMiddleware = (req, res, next) => {
   try {
