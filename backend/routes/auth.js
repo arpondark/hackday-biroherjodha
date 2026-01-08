@@ -55,6 +55,7 @@ router.post('/google', async (req, res) => {
         name: user.name,
         email: user.email,
         avatar: user.avatar,
+        createdAt: user.createdAt,
       },
     });
   } catch (error) {
@@ -86,6 +87,7 @@ router.get('/verify', async (req, res) => {
         name: user.name,
         email: user.email,
         avatar: user.avatar,
+        createdAt: user.createdAt,
       },
     });
   } catch (error) {
