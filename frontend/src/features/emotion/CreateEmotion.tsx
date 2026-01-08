@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Sliders, PenTool, Wand2, Activity, Info, Camera, ScanFace, ChevronRight } from 'lucide-react';
 import Webcam from 'react-webcam';
 import { EmotionCanvas } from './EmotionCanvas';
+import { RhythmCanvas } from './RhythmCanvas';
 import { emotionColors, PatternType } from '@/utils/emotions';
 import { emotionService } from '@/services/emotionService';
 import { cn } from '@/utils/cn';
@@ -325,6 +326,25 @@ export const CreateEmotion: React.FC = () => {
                   </div>
                 )}
 
+                {activeTab === 'Rhythm' && (
+                  <div className="space-y-4 p-6 rounded-2xl bg-white/5 border border-white/10">
+                     <div className="flex items-center gap-3 text-accent-primary mb-2">
+                        <Activity className="w-5 h-5" />
+                        <h3 className="font-bold uppercase tracking-widest text-sm">Rhythm Detection Active</h3>
+                     </div>
+                     <p className="text-white/60 text-sm leading-relaxed">
+                        Tap or click rhythmically in the right panel to set the tempo of your emotional signal. 
+                        The intensity will automatically adjust to your BPM.
+                     </p>
+                     <div className="pt-4 flex items-center justify-between border-t border-white/10">
+                        <span className="text-xs text-white/40 uppercase font-mono">Current Style:</span>
+                        <span className="text-xs font-bold text-white uppercase tracking-widest">
+                           {motionIntensity > 0.5 ? 'Energetic' : motionIntensity > 0.25 ? 'Moderate' : 'Calm'}
+                        </span>
+                     </div>
+                  </div>
+                )}
+
                 {/* Intensity Slider */}
                 <div className="space-y-4 pt-4 border-t border-white/10">
                    <div className="flex justify-between items-center text-sm">
@@ -402,12 +422,17 @@ export const CreateEmotion: React.FC = () => {
                    </div>
                    <p className="font-mono uppercase tracking-widest text-sm">Waiting for Analysis Input source...</p>
                 </div>
+             ) : activeTab === 'Rhythm' ? (
+                <RhythmCanvas 
+                  color={selectedColor} 
+                  onRhythmChange={(bpm) => setMotionIntensity(bpm / 240)}
+                />
              ) : (
                 <EmotionCanvas
                   color={selectedColor}
-                  pattern={activeTab === 'Draw' ? 'draw' : activeTab === 'Rhythm' ? 'rhythm' : selectedPattern}
+                  pattern={activeTab === 'Draw' ? 'draw' : selectedPattern}
                   motionIntensity={motionIntensity}
-                  mode={activeTab === 'Draw' ? 'Draw' : activeTab === 'Rhythm' ? 'Rhythm' : 'Controls'}
+                  mode={activeTab === 'Draw' ? 'Draw' : 'Controls'}
                 />
              )}
 
