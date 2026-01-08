@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Sliders, PenTool, Wand2, Activity, Moon, Info } from 'lucide-react';
+import { Send, Sliders, PenTool, Wand2, Activity, Moon, Info, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { EmotionCanvas } from './EmotionCanvas';
 import { RhythmCanvas } from './RhythmCanvas';
 import { SilenceCanvas } from './SilenceCanvas';
@@ -89,7 +90,16 @@ export const CreateEmotion: React.FC = () => {
           
           {/* Header & Tabs */}
           <div className="space-y-4">
-            <h2 className="text-3xl font-bold text-white">Create Your Signal</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-3xl font-bold text-white">Create Your Signal</h2>
+              <Link 
+                to="/experimental"
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 rounded-lg text-white/80 hover:text-white transition-colors text-sm"
+              >
+                <Sparkles className="w-4 h-4" />
+                Experimental Lab
+              </Link>
+            </div>
             
             <div className="flex flex-wrap items-center gap-1 p-1 bg-white/5 rounded-lg w-fit border border-white/10">
               {tabs.map((tab) => (

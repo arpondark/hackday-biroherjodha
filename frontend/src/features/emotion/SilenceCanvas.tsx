@@ -399,31 +399,179 @@ function drawSilenceAmbient(
   silenceTime: number
 ) {
   const intensity = Math.min(1, silenceTime / 30);
+  const centerX = width / 2;
+  const centerY = height / 2;
 
-  // Breathing circle in center
-  const breathSize = 50 + Math.sin(time * 0.5) * 20 * intensity;
-  const gradient = ctx.createRadialGradient(
-    width / 2, height / 2, 0,
-    width / 2, height / 2, breathSize * 3
+  // 1. Breathing pulse rings - expand outward from center
+  const pulseCount = Math.floor(silenceTime / 3);
+  for (let i = 0; i < Math.min(pulseCount, 8); i++) {
+    const pulseProgress = ((time * 0.3 + i * 0.5) % 1);
+    const pulseSize = pulseProgress * Math.min(width, height) * 0.6;
+    const pulseAlpha = (1 - pulseProgress) * 0.15 * intensity;
+    
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, pulseSize, 0, Math.PI * 2);
+    ctx.strokeStyle = hexToRgba(shiftHue(color, i * 15), pulseAlpha);
+    ctx.lineWidth = 2 + (1 - pulseProgress) * 3;
+    ctx.stroke();
+  }
+
+  // 2. Floating orbs that appear with silence
+  const orbCount = Math.min(Math.floor(silenceTime / 2), 12);
+  for (let i = 0; i < orbCount; i++) {
+    const angle = (i / orbCount) * Math.PI * 2 + time * 0.1;
+    const distance = 80 + Math.sin(time * 0.5 + i) * 30 + silenceTime * 3;
+    const orbX = centerX + Math.cos(angle) * distance;
+    const orbY = centerY + Math.sin(angle) * distance;
+    const orbSize = 8 + Math.sin(time + i * 2) * 4;
+    
+    const orbGradient = ctx.createRadialGradient(orbX, orbY, 0, orbX, orbY, orbSize * 2);
+    orbGradient.addColorStop(0, hexToRgba(shiftHue(color, i * 25), 0.6));
+    orbGradient.addColorStop(0.5, hexToRgba(shiftHue(color, i * 25), 0.2));
+    orbGradient.addColorStop(1, 'transparent');
+    
+    ctx.beginPath();
+    ctx.arc(orbX, orbY, orbSize * 2, 0, Math.PI * 2);
+    ctx.fillStyle = orbGradient;
+    ctx.fill();
+  }
+
+  // 3. Central breathing core
+  const breathSize = 50 + Math.sin(time * 0.5) * 20 * intensity + silenceTime * 1.5;
+  const coreGradient = ctx.createRadialGradient(
+    centerX, centerY, 0,
+    centerX, centerY, breathSize * 3
   );
-  gradient.addColorStop(0, hexToRgba(color, 0.1 * intensity));
-  gradient.addColorStop(0.5, hexToRgba(color, 0.05 * intensity));
-  gradient.addColorStop(1, 'transparent');
+  coreGradient.addColorStop(0, hexToRgba(color, 0.2 * intensity));
+  coreGradient.addColorStop(0.3, hexToRgba(color, 0.1 * intensity));
+  coreGradient.addColorStop(0.6, hexToRgba(shiftHue(color, 30), 0.05 * intensity));
+  coreGradient.addColorStop(1, 'transparent');
   
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, width, height);
+  ctx.fillStyle = coreGradient;
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, breathSize * 3, 0, Math.PI * 2);
+  ctx.fill();
 
-  // Particle dust for transcending phase
-  if (phase === 'transcending') {
-    for (let i = 0; i < 20; i++) {
-      const px = (Math.sin(time + i * 0.5) * 0.5 + 0.5) * width;
-      const py = (Math.cos(time * 0.7 + i * 0.3) * 0.5 + 0.5) * height;
-      const pSize = 2 + Math.sin(time + i) * 1;
+  // 4. Flowing light streams
+  if (phase === 'growing' || phase === 'connecting' || phase === 'transcending') {
+    const streamCount = phase === 'transcending' ? 8 : phase === 'connecting' ? 5 : 3;
+    for (let i = 0; i < streamCount; i++) {
+      const startAngle = (i / streamCount) * Math.PI * 2 + time * 0.2;
+      const streamLength = 100 + silenceTime * 5;
+      
+      ctx.beginPath();
+      for (let j = 0; j < 50; j++) {
+        const t = j / 50;
+        const angle = startAngle + t * 0.5 + Math.sin(time + i) * 0.3;
+        const dist = t * streamLength;
+        const x = centerX + Math.cos(angle) * dist;
+        const y = centerY + Math.sin(angle) * dist;
+        
+        if (j === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = hexToRgba(shiftHue(color, i * 40), 0.1 + intensity * 0.2);
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+  }
+
+  // 5. Particle nebula for connecting/transcending
+  if (phase === 'connecting' || phase === 'transcending') {
+    const particleCount = phase === 'transcending' ? 60 : 30;
+    for (let i = 0; i < particleCount; i++) {
+      const angle = (i / particleCount) * Math.PI * 2 + time * 0.05;
+      const wave = Math.sin(time * 0.5 + i * 0.2) * 50;
+      const baseRadius = 150 + silenceTime * 2;
+      const px = centerX + Math.cos(angle) * (baseRadius + wave);
+      const py = centerY + Math.sin(angle) * (baseRadius + wave);
+      const pSize = 1 + Math.sin(time * 2 + i) * 1;
       
       ctx.beginPath();
       ctx.arc(px, py, pSize, 0, Math.PI * 2);
-      ctx.fillStyle = hexToRgba(color, 0.3);
+      ctx.fillStyle = hexToRgba(shiftHue(color, i * 6), 0.4 + Math.sin(time + i) * 0.2);
       ctx.fill();
+    }
+  }
+
+  // 6. Sacred geometry hints in transcending
+  if (phase === 'transcending' && silenceTime > 20) {
+    const geoAlpha = Math.min((silenceTime - 20) / 30, 0.3);
+    
+    // Outer circle
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 180 + Math.sin(time) * 10, 0, Math.PI * 2);
+    ctx.strokeStyle = hexToRgba('#ffffff', geoAlpha * 0.3);
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    
+    // Inner triangles (flower of life hint)
+    for (let i = 0; i < 6; i++) {
+      const angle = (i / 6) * Math.PI * 2 + time * 0.05;
+      const x1 = centerX + Math.cos(angle) * 100;
+      const y1 = centerY + Math.sin(angle) * 100;
+      const x2 = centerX + Math.cos(angle + Math.PI * 2 / 3) * 100;
+      const y2 = centerY + Math.sin(angle + Math.PI * 2 / 3) * 100;
+      const x3 = centerX + Math.cos(angle - Math.PI * 2 / 3) * 100;
+      const y3 = centerY + Math.sin(angle - Math.PI * 2 / 3) * 100;
+      
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.lineTo(x3, y3);
+      ctx.closePath();
+      ctx.strokeStyle = hexToRgba(color, geoAlpha * 0.2);
+      ctx.stroke();
+    }
+    
+    // Hexagon
+    ctx.beginPath();
+    for (let i = 0; i <= 6; i++) {
+      const angle = (i / 6) * Math.PI * 2 - Math.PI / 6;
+      const x = centerX + Math.cos(angle) * 120;
+      const y = centerY + Math.sin(angle) * 120;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = hexToRgba('#ffffff', geoAlpha * 0.2);
+    ctx.stroke();
+  }
+
+  // 7. Ambient floating dust particles
+  const dustCount = Math.floor(20 + silenceTime * 2);
+  for (let i = 0; i < Math.min(dustCount, 80); i++) {
+    const px = ((Math.sin(time * 0.2 + i * 0.7) + 1) / 2) * width;
+    const py = ((Math.cos(time * 0.15 + i * 0.5) + 1) / 2) * height;
+    const pSize = 0.5 + Math.random() * 1.5;
+    const pAlpha = 0.1 + Math.sin(time + i) * 0.05;
+    
+    ctx.beginPath();
+    ctx.arc(px, py, pSize, 0, Math.PI * 2);
+    ctx.fillStyle = hexToRgba('#ffffff', pAlpha);
+    ctx.fill();
+  }
+
+  // 8. Aurora waves at edges during transcending
+  if (phase === 'transcending') {
+    for (let i = 0; i < 3; i++) {
+      ctx.beginPath();
+      for (let x = 0; x < width; x += 10) {
+        const waveY = height * 0.1 + i * 30 + 
+                      Math.sin(x * 0.01 + time + i) * 30 +
+                      Math.sin(x * 0.02 + time * 0.5) * 15;
+        if (x === 0) ctx.moveTo(x, waveY);
+        else ctx.lineTo(x, waveY);
+      }
+      
+      const auroraGradient = ctx.createLinearGradient(0, 0, width, 0);
+      auroraGradient.addColorStop(0, hexToRgba(shiftHue(color, i * 30), 0));
+      auroraGradient.addColorStop(0.3, hexToRgba(shiftHue(color, i * 30), 0.15));
+      auroraGradient.addColorStop(0.7, hexToRgba(shiftHue(color, i * 30 + 60), 0.15));
+      auroraGradient.addColorStop(1, hexToRgba(shiftHue(color, i * 30 + 60), 0));
+      
+      ctx.strokeStyle = auroraGradient;
+      ctx.lineWidth = 20;
+      ctx.stroke();
     }
   }
 }

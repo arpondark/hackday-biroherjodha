@@ -9,7 +9,7 @@ import { TherapyPage } from '@/features/therapy/TherapyPage';
 import { EmotionHistory } from '@/features/history/EmotionHistory';
 import { ProfilePage } from '@/features/profile/ProfilePage';
 import { SilencePage } from '@/features/silence/SilencePage';
-import { CalmMode } from '@/features/calm/CalmMode';
+import { ExperimentalPage } from '@/features/experimental/ExperimentalPage';
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -36,10 +36,10 @@ export const AppRoutes: React.FC = () => {
         }
       />
       <Route
-        path="/calm"
+        path="/experimental"
         element={
           <ProtectedRoute>
-            <CalmMode />
+            <ExperimentalPage />
           </ProtectedRoute>
         }
       />
