@@ -177,7 +177,7 @@ export const TherapyPage: React.FC = () => {
   const progress = ((duration - timeLeft) / duration) * 100;
 
   return (
-    <div className="min-h-screen w-full flex flex-col md:flex-row bg-black overflow-hidden pt-40">
+    <div className="min-h-screen w-full flex flex-col md:flex-row bg-black overflow-hidden">
       {/* Canvas Area */}
       <div className="flex-1 relative">
         <EmotionCanvas
@@ -232,7 +232,7 @@ export const TherapyPage: React.FC = () => {
         className="w-full md:w-96 bg-gradient-to-b from-black/60 via-black/40 to-black/60 
                    backdrop-blur-2xl border-l border-white/10 p-8 space-y-8 overflow-y-auto
                    shadow-[-20px_0_60px_-15px_rgba(108,99,255,0.2)] 
-                   max-h-[calc(100vh-10rem)]"
+                   md:max-h-screen max-h-[calc(100vh-20rem)]"
       >
         {/* Header with Decorative Line */}
         <div className="relative">
