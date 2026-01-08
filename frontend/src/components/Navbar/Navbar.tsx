@@ -1,12 +1,13 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Layers, Heart, History, User, Mic2, Wind } from 'lucide-react';
+import { Layers, Heart, History, User, Mic2, Wind, FlaskConical } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/utils/cn';
 
 const navItems = [
   { path: '/dashboard', icon: Mic2, label: 'Express' },
   { path: '/silence', icon: Wind, label: 'Silence' },
+  { path: '/experiments', icon: FlaskConical, label: 'Lab' },
   { path: '/therapy', icon: Heart, label: 'Therapy' },
   { path: '/feed', icon: Layers, label: 'Connect' },
   { path: '/calm', icon: User, label: 'Calm' }, // Placeholder route

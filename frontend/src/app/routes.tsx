@@ -11,6 +11,7 @@ import { ProfilePage } from '@/features/profile/ProfilePage';
 import { SilencePage } from '@/features/silence/SilencePage';
 import { EmotionDetail } from '@/features/feed/EmotionDetail';
 import { CalmMode } from '@/features/calm/CalmMode';
+import { ExperimentalLab } from '@/features/experimental/ExperimentalLab';
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -81,6 +82,14 @@ export const AppRoutes: React.FC = () => {
         element={
           <ProtectedRoute>
             <CalmMode />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/experiments"
+        element={
+          <ProtectedRoute>
+            <ExperimentalLab />
           </ProtectedRoute>
         }
       />
