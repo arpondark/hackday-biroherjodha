@@ -42,4 +42,9 @@ export const emotionService = {
     const response = await api.post(`/emotions/${emotionId}/respond`, data);
     return response.data;
   },
+  // Get single emotion
+  getEmotionById: async (id: string): Promise<EmotionPost> => {
+    const response = await api.get(`/emotions/${id}`);
+    return response.data;
+  },
 };

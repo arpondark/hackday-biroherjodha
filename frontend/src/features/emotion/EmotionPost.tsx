@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { EmotionCanvas } from './EmotionCanvas';
 import { EmotionPost as EmotionPostType } from '@/services/emotionService';
@@ -9,6 +10,16 @@ interface EmotionPostProps {
 }
 
 export const EmotionPost: React.FC<EmotionPostProps> = ({ post, onClick }) => {
+  const navigate = useNavigate();
+  
+  const handleClick = () => {
+    if (onClick) {
+      onClick();
+    } else {
+      navigate(`/signal/${post.id}`);
+    }
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -25,8 +36,8 @@ export const EmotionPost: React.FC<EmotionPostProps> = ({ post, onClick }) => {
 
   return (
     <motion.div
-      className="emotion-post glass-effect"
-      onClick={onClick}
+      className="emotion-post glass-effect cursor-pointer"
+      onClick={handleClick}
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       whileHover={{ scale: 1.02 }}

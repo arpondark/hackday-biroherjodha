@@ -108,6 +108,31 @@ router.get('/history', authMiddleware, async (req, res) => {
   }
 });
 
+// Get single emotion by ID
+router.get('/:id', authMiddleware, async (req, res) => {
+  try {
+    const emotion = await Emotion.findById(req.params.id)
+      .populate('userId', 'name avatar');
+
+    if (!emotion) {
+      return res.status(404).json({ error: 'Emotion not found' });
+    }
+
+    res.json({
+      id: emotion._id,
+      userId: emotion.userId._id,
+      color: emotion.color,
+      pattern: emotion.pattern,
+      motionIntensity: emotion.motionIntensity,
+      createdAt: emotion.createdAt,
+      user: emotion.userId // Send full user object for display if needed
+    });
+  } catch (error) {
+    console.error('Error fetching emotion:', error);
+    res.status(500).json({ error: 'Failed to fetch emotion' });
+  }
+});
+
 // Delete emotion (user can only delete their own)
 router.delete('/:id', authMiddleware, async (req, res) => {
   try {
