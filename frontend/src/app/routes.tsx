@@ -8,7 +8,7 @@ import { EmotionFeed } from '@/features/feed/EmotionFeed';
 import { TherapyPage } from '@/features/therapy/TherapyPage';
 import { EmotionHistory } from '@/features/history/EmotionHistory';
 import { ProfilePage } from '@/features/profile/ProfilePage';
-import { SilencePage } from '@/features/silence/SilencePage';
+import { SilencePage } from '../features/silence/SilencePage';
 import { EmotionDetail } from '@/features/feed/EmotionDetail';
 import { CalmMode } from '@/features/calm/CalmMode';
 import { ExperimentalLab } from '@/features/experimental/ExperimentalLab';

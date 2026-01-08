@@ -13,6 +13,23 @@ Frontend visuals are the language; the backend only supports storing and sharing
 - Feelings are embedded, not described
 - UX must **feel** the idea, not explain it
 
+### New Additions (Theme-Optimized)
+
+We have recently integrated the following features to align perfectly with the core themes:
+
+1. **Theme 1: Emotions speak louder than words**
+   - **Overhauled Profile Dashboard**: Replaced text-heavy settings with a professional 3D visual dashboard that reflects your emotional journey through patterns and "Resonances" rather than just account details.
+   - **Visual Stats**: Added "streak" and "mood" tracking using visual indicators ($[frontend/src/features/profile/ProfilePage.tsx](frontend/src/features/profile/ProfilePage.tsx)$).
+
+2. **Theme 2: Silence is also a language**
+   - **SilencePage & Canvas**: A dedicated space where "nothing" is the interaction. The background evolves as you remain silent, proving that staying quiet is its own form of expression ($[frontend/src/features/silence/SilencePage.tsx](frontend/src/features/silence/SilencePage.tsx)$).
+
+3. **Theme 5: Feelings hidden in patterns**
+   - **Experimental Lab**: Introduced "Hidden Patterns" mode where emotions aren't shown directly but emerge from overlapping visual rhythms, requiring patient observation ($[frontend/src/features/experimental/ExperimentalLab.tsx](frontend/src/features/experimental/ExperimentalLab.tsx)$).
+
+4. **Theme 7: Silence speaks what sound cannot**
+   - **Audio-Visual Immersion**: Master volume and audio immersion settings in the profile allow users to tune the silent frequency therapy, where the "lack of noise" is the primary healing tool ($[frontend/src/features/profile/ProfilePage.tsx](frontend/src/features/profile/ProfilePage.tsx)$).
+
 ## Features
 
 ### Frontend (Theme-Critical)

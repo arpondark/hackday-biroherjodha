@@ -1,8 +1,9 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Layers, Heart, History, User, Mic2, Wind, FlaskConical } from 'lucide-react';
+import { Layers, Heart, History, User, Mic2, Wind, FlaskConical, LogOut } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/utils/cn';
+import { useAuth } from '@/app/providers/AuthProvider';
 
 const navItems = [
   { path: '/dashboard', icon: Mic2, label: 'Express' },
@@ -15,6 +16,7 @@ const navItems = [
 
 export const Navbar: React.FC = () => {
   const location = useLocation();
+  const { logout } = useAuth();
 
   // Don't show navbar on login and landing pages
   if (location.pathname === '/login' || location.pathname === '/') {
@@ -69,12 +71,34 @@ export const Navbar: React.FC = () => {
 
         {/* User / Actions */}
         <div className="flex items-center gap-4">
-          <NavLink 
-            to="/profile" 
-            className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
-          >
-            <User className="w-5 h-5 text-white/70" />
-          </NavLink>
+          <div className="relative group">
+            <NavLink 
+              to="/profile" 
+              className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
+            >
+              <User className="w-5 h-5 text-white/70" />
+            </NavLink>
+            
+            {/* Dropdown */}
+            <div className="absolute top-full right-0 mt-2 w-48 bg-[#1A103C] border border-white/10 rounded-xl shadow-xl overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right z-50">
+              <div className="p-1">
+                 <NavLink 
+                  to="/profile" 
+                  className="flex items-center gap-2 px-4 py-3 text-sm text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                 >
+                    <User className="w-4 h-4" />
+                    <span>Profile</span>
+                 </NavLink>
+                 <button 
+                  onClick={logout} 
+                  className="w-full flex items-center gap-2 px-4 py-3 text-sm text-red-400 hover:text-red-300 hover:bg-white/5 rounded-lg transition-colors text-left"
+                 >
+                    <LogOut className="w-4 h-4" />
+                    <span>Log Out</span>
+                 </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </header>
