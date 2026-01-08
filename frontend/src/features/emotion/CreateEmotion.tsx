@@ -137,7 +137,7 @@ export const CreateEmotion: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen pt-48 pb-8 px-8 container mx-auto relative">
+    <div className="w-full pb-12 px-8 container mx-auto relative pt-12">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-[calc(100vh-160px)]">
         
         {/* Left Column: Controls */}

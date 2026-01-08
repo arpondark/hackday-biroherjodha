@@ -30,7 +30,7 @@ export const LandingPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen w-full bg-background-darker relative overflow-y-auto">
+    <div className="min-h-screen w-full bg-background-darker relative">
       {/* Animated Background */}
       <div className="absolute inset-0">
         <motion.div

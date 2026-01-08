@@ -35,7 +35,7 @@ export const SilencePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen pt-48 pb-8 px-4 container mx-auto flex flex-col items-center justify-center">
+    <div className="w-full py-16 px-4 container mx-auto flex flex-col items-center justify-center">
       <div className="max-w-2xl w-full text-center space-y-12">
         
         {/* Header */}

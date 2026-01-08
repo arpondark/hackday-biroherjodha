@@ -12,10 +12,12 @@ function App() {
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <BrowserRouter>
         <AuthProvider>
-          <div className="h-screen w-screen flex flex-col bg-background-darker">
+          <div className="min-h-screen w-full flex flex-col bg-background-dark text-white selection:bg-accent-primary/30 selection:text-white">
             <Navbar />
-            <main className="flex-1 overflow-y-auto">
-              <AppRoutes />
+            <main className="flex-1 flex flex-col">
+              <div className="flex-1 pt-20">
+                <AppRoutes />
+              </div>
               <Footer />
             </main>
           </div>

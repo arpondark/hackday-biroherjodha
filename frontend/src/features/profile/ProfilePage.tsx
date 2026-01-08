@@ -28,7 +28,7 @@ export const ProfilePage: React.FC = () => {
   };
 
   return (
-    <div className="h-full w-full overflow-y-auto p-6 md:p-8">
+    <div className="w-full p-6 md:p-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
