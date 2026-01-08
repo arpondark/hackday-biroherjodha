@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Wind, Play, Square, Timer } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Wind, Play, Square } from 'lucide-react';
 import { cn } from '@/utils/cn';
 
 export const SilencePage: React.FC = () => {

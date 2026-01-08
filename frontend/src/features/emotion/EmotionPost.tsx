@@ -37,7 +37,6 @@ export const EmotionPost: React.FC<EmotionPostProps> = ({ post, onClick }) => {
           color={post.color}
           pattern={post.pattern}
           motionIntensity={post.motionIntensity}
-          interactive={false}
         />
       </div>
       

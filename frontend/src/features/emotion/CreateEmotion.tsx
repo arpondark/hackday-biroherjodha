@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Send, Sliders, PenTool, Wand2, Activity, Info } from 'lucide-react';
 import { EmotionCanvas } from './EmotionCanvas';
-import { emotionColors, emotionPatterns, PatternType } from '@/utils/emotions';
+import { emotionColors, PatternType } from '@/utils/emotions';
 import { emotionService } from '@/services/emotionService';
 import { cn } from '@/utils/cn';
 
@@ -15,29 +16,45 @@ const patternDetails: Record<PatternType, { label: string; desc: string }> = {
   circles: { label: 'Circles', desc: 'Looping, connection' },
   flow: { label: 'Flow', desc: 'Steady stream' },
   pulse: { label: 'Pulse', desc: 'Steady, heartbeat' },
+  draw: { label: 'Draw', desc: 'Freeform expression' },
+  rhythm: { label: 'Rhythm', desc: 'Visual beat' },
 };
 
 // Filter patterns to match the design (showing key ones clearly)
-const displayPatterns: PatternType[] = ['waves', 'spirals', 'pulse', 'ripples'];
+const displayPatterns: PatternType[] = ['waves', 'spirals', 'pulse', 'ripples', 'particles'];
 
 export const CreateEmotion: React.FC = () => {
-  const [selectedColor, setSelectedColor] = useState(emotionColors.calm);
+  const navigate = useNavigate();
+  const [selectedColor, setSelectedColor] = useState<string>(emotionColors.calm);
   const [selectedPattern, setSelectedPattern] = useState<PatternType>('waves');
   const [motionIntensity, setMotionIntensity] = useState(0.5);
   const [isPosting, setIsPosting] = useState(false);
   const [activeTab, setActiveTab] = useState('Controls');
 
+  const [showSuccess, setShowSuccess] = useState(false);
+
   const handlePost = async () => {
     setIsPosting(true);
     try {
+      // Use activeTab as pattern for Draw/Rhythm, otherwise selectedPattern
+      let patternToSave = selectedPattern;
+      if (activeTab === 'Draw') patternToSave = 'draw' as PatternType; 
+      if (activeTab === 'Rhythm') patternToSave = 'rhythm' as PatternType;
+
       await emotionService.createEmotion({
         color: selectedColor,
-        pattern: selectedPattern,
+        pattern: patternToSave,
         motionIntensity,
       });
+
+      // Show success feedback
+      setShowSuccess(true);
       setTimeout(() => {
         setIsPosting(false);
-      }, 1000);
+        setShowSuccess(false);
+        navigate('/feed');
+      }, 2000);
+      
     } catch (error) {
       console.error('Failed to post emotion:', error);
       setIsPosting(false);
@@ -45,7 +62,7 @@ export const CreateEmotion: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen pt-48 pb-8 px-8 container mx-auto">
+    <div className="min-h-screen pt-48 pb-8 px-8 container mx-auto relative">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-[calc(100vh-160px)]">
         
         {/* Left Column: Controls */}
@@ -88,62 +105,117 @@ export const CreateEmotion: React.FC = () => {
             </div>
           </div>
 
-          {/* Color Grid */}
-          <div className="space-y-3">
-            <label className="text-sm font-medium text-white/80">Choose Your Emotion Color</label>
-            <div className="grid grid-cols-4 gap-4">
-              {Object.entries(emotionColors).slice(0, 8).map(([name, color]) => (
-                <motion.button
-                  key={name}
-                  onClick={() => setSelectedColor(color)}
-                  className={cn(
-                    'aspect-square rounded-2xl transition-all relative overflow-hidden',
-                    selectedColor === color && 'ring-4 ring-white shadow-xl scale-105 z-10'
-                  )}
-                  style={{ backgroundColor: color }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white/90 opacity-0 hover:opacity-100 transition-opacity bg-black/20 capitalize z-20">
-                    {name}
-                  </span>
-                  {selectedColor === color && (
-                    <motion.div
-                      layoutId="color-indicator"
-                      className="absolute inset-0 rounded-2xl border-4 border-white z-10"
+          {/* Conditional Controls based on Tab */}
+          {activeTab === 'Controls' && (
+            <>
+              {/* Color Grid */}
+              <div className="space-y-3">
+                <label className="text-sm font-medium text-white/80">Choose Your Emotion Color</label>
+                <div className="grid grid-cols-4 gap-4">
+                  {Object.entries(emotionColors).slice(0, 8).map(([name, color]) => (
+                    <motion.button
+                      key={name}
+                      onClick={() => setSelectedColor(color)}
+                      className={cn(
+                        'aspect-square rounded-2xl transition-all relative overflow-hidden',
+                        selectedColor === color && 'ring-4 ring-white shadow-xl scale-105 z-10'
+                      )}
+                      style={{ backgroundColor: color }}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white/90 opacity-0 hover:opacity-100 transition-opacity bg-black/20 capitalize z-20">
+                        {name}
+                      </span>
+                      {selectedColor === color && (
+                        <motion.div
+                          layoutId="color-indicator"
+                          className="absolute inset-0 rounded-2xl border-4 border-white z-10"
+                        />
+                      )}
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Pattern Cards */}
+              <div className="space-y-3">
+                <label className="text-sm font-medium text-white/80">Choose Motion Pattern</label>
+                <div className="grid grid-cols-2 gap-4">
+                  {displayPatterns.map((pattern) => (
+                    <button
+                      key={pattern}
+                      onClick={() => setSelectedPattern(pattern)}
+                      className={cn(
+                        'p-4 rounded-xl text-left transition-all border border-transparent',
+                        selectedPattern === pattern
+                          ? 'bg-gradient-to-br from-[#7B61FF] to-[#6C63FF]/50 border-white/20 shadow-lg'
+                          : 'bg-white/5 hover:bg-white/10 border-white/5'
+                      )}
+                    >
+                      <div className="font-bold text-white mb-1">{patternDetails[pattern].label}</div>
+                      <div className="text-xs text-white/60">{patternDetails[pattern].desc}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+
+          {activeTab === 'Draw' && (
+            <div className="space-y-6">
+              <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
+                <p className="text-white/80 mb-4">Express yourself freely directly on the canvas.</p>
+                
+                <label className="text-sm font-medium text-white/80 block mb-3">Brush Color</label>
+                <div className="grid grid-cols-6 gap-3">
+                  {Object.values(emotionColors).slice(0, 12).map((color) => (
+                    <button
+                      key={color}
+                      onClick={() => setSelectedColor(color)}
+                      className={cn(
+                        "w-10 h-10 rounded-full border-2 transition-all",
+                        selectedColor === color ? "border-white scale-110" : "border-transparent opacity-70 hover:opacity-100"
+                      )}
+                      style={{ backgroundColor: color }}
                     />
-                  )}
-                </motion.button>
-              ))}
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
+          )}
 
-          {/* Pattern Cards */}
-          <div className="space-y-3">
-            <label className="text-sm font-medium text-white/80">Choose Motion Pattern</label>
-            <div className="grid grid-cols-2 gap-4">
-              {displayPatterns.map((pattern) => (
-                <button
-                  key={pattern}
-                  onClick={() => setSelectedPattern(pattern)}
-                  className={cn(
-                    'p-4 rounded-xl text-left transition-all border border-transparent',
-                    selectedPattern === pattern
-                      ? 'bg-gradient-to-br from-[#7B61FF] to-[#6C63FF]/50 border-white/20 shadow-lg'
-                      : 'bg-white/5 hover:bg-white/10 border-white/5'
-                  )}
-                >
-                  <div className="font-bold text-white mb-1">{patternDetails[pattern].label}</div>
-                  <div className="text-xs text-white/60">{patternDetails[pattern].desc}</div>
-                </button>
-              ))}
-            </div>
-          </div>
+          {activeTab === 'Rhythm' && (
+             <div className="space-y-6">
+               <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
+                 <p className="text-white/80 mb-4">Visualize the rhythm of your emotions.</p>
+                 <label className="text-sm font-medium text-white/80 block mb-3">Rhythm Color</label>
+                  <div className="grid grid-cols-6 gap-3 mb-6">
+                    {Object.values(emotionColors).slice(0, 6).map((color) => (
+                      <button
+                        key={color}
+                        onClick={() => setSelectedColor(color)}
+                        className={cn(
+                          "w-10 h-10 rounded-full border-2 transition-all",
+                          selectedColor === color ? "border-white scale-110" : "border-transparent opacity-70 hover:opacity-100"
+                        )}
+                        style={{ backgroundColor: color }}
+                      />
+                    ))}
+                  </div>
+                 
+                 <div className="flex justify-between text-sm text-white/60 mb-2">
+                   <span>Rhythm Tempo</span>
+                   <span>{Math.round(motionIntensity * 120)} BPM</span>
+                 </div>
+               </div>
+             </div>
+          )}
 
-          {/* Intensity Control */}
+          {/* Intensity/Speed Control (Shared) */}
           <div className="mt-auto">
              <div className="flex justify-between text-sm text-white/60 mb-2">
-               <span>Intensity Level</span>
+               <span>{activeTab === 'Rhythm' ? 'Tempo' : 'Intensity'}</span>
                <span>{Math.round(motionIntensity * 100)}%</span>
              </div>
              <input
@@ -156,7 +228,6 @@ export const CreateEmotion: React.FC = () => {
               className="w-full h-2 bg-white/10 rounded-full appearance-none cursor-pointer accent-accent-primary"
             />
           </div>
-
         </div>
 
         {/* Right Column: Preview */}
@@ -171,6 +242,7 @@ export const CreateEmotion: React.FC = () => {
                color={selectedColor}
                pattern={selectedPattern}
                motionIntensity={motionIntensity}
+               mode={activeTab as any}
              />
           </div>
 
@@ -192,6 +264,28 @@ export const CreateEmotion: React.FC = () => {
         </div>
 
       </div>
+
+      {/* Success Modal */}
+      {showSuccess && (
+        <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+        >
+            <div className="bg-[#1A103C] p-8 rounded-3xl border border-white/10 shadow-2xl text-center max-w-sm mx-4">
+                <div className="w-16 h-16 rounded-full bg-accent-primary/20 flex items-center justify-center mx-auto mb-4 text-accent-primary">
+                   <Send className="w-8 h-8" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-2">Signal Sent!</h3>
+                <p className="text-white/60 mb-6">Your emotion was successfully shared to the feed.</p>
+                <div className="px-4 py-2 bg-white/5 rounded-lg border border-white/5 text-sm text-white/40">
+                    Visible in Feed
+                </div>
+            </div>
+        </motion.div>
+      )}
+
     </div>
   );
 };

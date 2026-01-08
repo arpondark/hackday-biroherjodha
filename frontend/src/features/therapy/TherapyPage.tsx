@@ -225,40 +225,120 @@ export const TherapyPage: React.FC = () => {
       </div>
 
       {/* Controls Panel */}
-      <div className="w-full md:w-80 glass-effect p-6 space-y-6 overflow-y-auto">
-        <h2 className="text-2xl font-bold gradient-text">Therapy Mode</h2>
+      <motion.div 
+        initial={{ x: 100, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="w-full md:w-96 bg-gradient-to-b from-black/60 via-black/40 to-black/60 
+                   backdrop-blur-2xl border-l border-white/10 p-8 space-y-8 overflow-y-auto
+                   shadow-[-20px_0_60px_-15px_rgba(108,99,255,0.2)]"
+      >
+        {/* Header with Decorative Line */}
+        <div className="relative">
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: "100%" }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="absolute -top-2 left-0 h-0.5 bg-gradient-to-r from-accent-primary via-accent-secondary to-transparent"
+          />
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-primary/30 to-accent-secondary/30 
+                          flex items-center justify-center backdrop-blur-sm border border-white/10">
+              <span className="text-xl">🧘</span>
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-white via-white to-white/60 bg-clip-text text-transparent">
+                Therapy Mode
+              </h2>
+              <p className="text-xs text-white/50">Healing frequencies for your soul</p>
+            </div>
+          </div>
+        </div>
 
         {/* Frequency Mode Selection */}
-        <div className="space-y-3">
-          <label className="text-sm font-medium text-white/80">Frequency Mode</label>
-          <div className="grid grid-cols-2 gap-3">
-            {frequencyModes.map((mode) => (
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <div className="w-1 h-4 rounded-full bg-gradient-to-b from-accent-primary to-accent-secondary" />
+            <label className="text-sm font-semibold text-white/90 uppercase tracking-wider">Frequency Mode</label>
+          </div>
+          <div className="space-y-2">
+            {frequencyModes.map((mode, index) => (
               <motion.button
                 key={mode.name}
                 onClick={() => handleModeChange(mode)}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1 }}
                 className={cn(
-                  'p-3 rounded-xl text-sm font-medium transition-all text-left',
+                  'w-full p-4 rounded-2xl text-left transition-all duration-300 relative overflow-hidden group',
                   selectedMode.name === mode.name
-                    ? 'bg-gradient-to-r from-accent-primary to-accent-secondary text-white'
-                    : 'glass-effect text-white/80 hover:bg-white/10'
+                    ? 'bg-gradient-to-r from-accent-primary/20 to-accent-secondary/20 border-2 border-accent-primary/50 shadow-lg shadow-accent-primary/20'
+                    : 'bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/10'
                 )}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.02, x: 5 }}
+                whileTap={{ scale: 0.98 }}
               >
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-lg">{mode.icon}</span>
-                  <span className="font-semibold">{mode.name}</span>
+                {/* Glow effect for selected */}
+                {selectedMode.name === mode.name && (
+                  <motion.div
+                    layoutId="activeGlow"
+                    className="absolute inset-0 bg-gradient-to-r from-accent-primary/10 to-accent-secondary/10 rounded-2xl"
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
+                
+                <div className="relative flex items-center gap-4">
+                  <div 
+                    className={cn(
+                      "w-12 h-12 rounded-xl flex items-center justify-center text-2xl transition-all duration-300",
+                      selectedMode.name === mode.name 
+                        ? "bg-gradient-to-br from-accent-primary to-accent-secondary shadow-lg" 
+                        : "bg-white/10 group-hover:bg-white/15"
+                    )}
+                    style={{ 
+                      boxShadow: selectedMode.name === mode.name ? `0 4px 20px ${mode.color}40` : 'none'
+                    }}
+                  >
+                    {mode.icon}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-white">{mode.name}</span>
+                      <span 
+                        className={cn(
+                          "text-xs px-2 py-1 rounded-full font-mono",
+                          selectedMode.name === mode.name 
+                            ? "bg-accent-primary/30 text-accent-primary" 
+                            : "bg-white/10 text-white/60"
+                        )}
+                      >
+                        {mode.frequency} Hz
+                      </span>
+                    </div>
+                    <p className="text-xs text-white/50 mt-1 line-clamp-1">{mode.description}</p>
+                  </div>
+                  
+                  {/* Active indicator */}
+                  {selectedMode.name === mode.name && (
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-accent-primary shadow-lg shadow-accent-primary/50"
+                    />
+                  )}
                 </div>
-                <div className="text-xs opacity-80">{mode.frequency} Hz</div>
               </motion.button>
             ))}
           </div>
         </div>
 
         {/* Duration Selection */}
-        <div className="space-y-3">
-          <label className="text-sm font-medium text-white/80">Session Duration</label>
-          <div className="grid grid-cols-3 gap-3">
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <div className="w-1 h-4 rounded-full bg-gradient-to-b from-accent-secondary to-pink-500" />
+            <label className="text-sm font-semibold text-white/90 uppercase tracking-wider">Session Duration</label>
+          </div>
+          <div className="flex gap-3">
             {durations.map((d) => (
               <motion.button
                 key={d.value}
@@ -268,71 +348,159 @@ export const TherapyPage: React.FC = () => {
                 }}
                 disabled={isPlaying}
                 className={cn(
-                  'px-4 py-3 rounded-xl text-sm font-medium transition-all',
+                  'flex-1 py-4 rounded-2xl text-sm font-bold transition-all relative overflow-hidden',
                   duration === d.value
-                    ? 'bg-gradient-to-r from-accent-primary to-accent-secondary text-white'
-                    : 'glass-effect text-white/80 hover:bg-white/10',
-                  isPlaying && 'opacity-50 cursor-not-allowed'
+                    ? 'bg-gradient-to-br from-accent-primary to-accent-secondary text-white shadow-lg shadow-accent-primary/30'
+                    : 'bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20',
+                  isPlaying && 'opacity-40 cursor-not-allowed'
                 )}
-                whileHover={!isPlaying ? { scale: 1.05 } : {}}
+                whileHover={!isPlaying ? { scale: 1.05, y: -2 } : {}}
                 whileTap={!isPlaying ? { scale: 0.95 } : {}}
               >
-                {d.label}
+                {duration === d.value && (
+                  <motion.div
+                    className="absolute inset-0 bg-white/20"
+                    initial={{ x: '-100%' }}
+                    animate={{ x: '200%' }}
+                    transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                  />
+                )}
+                <span className="relative">{d.label}</span>
               </motion.button>
             ))}
           </div>
         </div>
 
         {/* Volume Control */}
-        <div className="space-y-3">
+        <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-white/80">Volume</label>
-            <button
+            <div className="flex items-center gap-2">
+              <div className="w-1 h-4 rounded-full bg-gradient-to-b from-green-400 to-emerald-600" />
+              <label className="text-sm font-semibold text-white/90 uppercase tracking-wider">Volume</label>
+            </div>
+            <motion.button
               onClick={toggleMute}
-              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className={cn(
+                "p-2.5 rounded-xl transition-all",
+                isMuted 
+                  ? "bg-red-500/20 text-red-400 border border-red-500/30" 
+                  : "bg-white/10 text-white/70 border border-white/10 hover:bg-white/15"
+              )}
             >
               {isMuted ? (
-                <VolumeX className="w-5 h-5 text-white/60" />
+                <VolumeX className="w-5 h-5" />
               ) : (
-                <Volume2 className="w-5 h-5 text-white/60" />
+                <Volume2 className="w-5 h-5" />
               )}
-            </button>
+            </motion.button>
           </div>
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.1"
-            value={volume}
-            onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
-            className="w-full h-2 bg-white/10 rounded-full appearance-none cursor-pointer
-                     [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 
-                     [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full 
-                     [&::-webkit-slider-thumb]:bg-accent-primary [&::-webkit-slider-thumb]:cursor-pointer
-                     [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 
-                     [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-accent-primary 
-                     [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
-          />
+          <div className="relative">
+            <div className="absolute inset-0 h-3 rounded-full bg-white/10 top-1/2 -translate-y-1/2" />
+            <motion.div 
+              className="absolute h-3 rounded-full bg-gradient-to-r from-accent-primary to-accent-secondary top-1/2 -translate-y-1/2"
+              style={{ width: `${volume * 100}%` }}
+            />
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.1"
+              value={volume}
+              onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
+              className="relative w-full h-3 bg-transparent rounded-full appearance-none cursor-pointer z-10
+                       [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 
+                       [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full 
+                       [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer
+                       [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:shadow-accent-primary/50
+                       [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-accent-primary
+                       [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 
+                       [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white 
+                       [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-accent-primary
+                       [&::-moz-range-thumb]:cursor-pointer"
+            />
+          </div>
+          <div className="flex justify-between text-xs text-white/40 font-mono">
+            <span>0%</span>
+            <span>{Math.round(volume * 100)}%</span>
+            <span>100%</span>
+          </div>
         </div>
 
-        {/* Mode Info */}
-        <div className="pt-4 border-t border-white/10 space-y-4">
-          <div>
-            <h3 className="text-sm font-medium text-white/80 mb-2">
-              {selectedMode.icon} {selectedMode.name} Mode
-            </h3>
-            <p className="text-xs text-white/60 leading-relaxed">
+        {/* Mode Info Card */}
+        <motion.div 
+          key={selectedMode.name}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative overflow-hidden rounded-2xl border border-white/10"
+        >
+          {/* Background gradient based on mode color */}
+          <div 
+            className="absolute inset-0 opacity-20"
+            style={{ 
+              background: `linear-gradient(135deg, ${selectedMode.color}40 0%, transparent 60%)` 
+            }}
+          />
+          
+          <div className="relative p-5 space-y-4">
+            <div className="flex items-center gap-3">
+              <div 
+                className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
+                style={{ backgroundColor: `${selectedMode.color}30` }}
+              >
+                {selectedMode.icon}
+              </div>
+              <div>
+                <h3 className="font-bold text-white">{selectedMode.name} Mode</h3>
+                <p className="text-xs font-mono" style={{ color: selectedMode.color }}>{selectedMode.frequency} Hz</p>
+              </div>
+            </div>
+            <p className="text-sm text-white/70 leading-relaxed">
               {selectedMode.description}
             </p>
+            
+            {/* Decorative wave */}
+            <div className="flex items-center gap-1 opacity-50">
+              {[...Array(20)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="w-1 rounded-full"
+                  style={{ backgroundColor: selectedMode.color }}
+                  animate={{ 
+                    height: isPlaying ? [4, 12, 4] : 4,
+                  }}
+                  transition={{
+                    duration: 0.5,
+                    repeat: Infinity,
+                    delay: i * 0.05,
+                    ease: "easeInOut"
+                  }}
+                />
+              ))}
+            </div>
           </div>
-          
-          <div className="glass-effect p-3 rounded-lg">
-            <p className="text-xs text-white/60">
-              💡 Use headphones for the best experience
+        </motion.div>
+
+        {/* Pro Tip */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="flex items-start gap-3 p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 
+                     border border-amber-500/20"
+        >
+          <div className="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center flex-shrink-0">
+            <span className="text-sm">💡</span>
+          </div>
+          <div>
+            <p className="text-xs font-semibold text-amber-400/90 mb-1">Pro Tip</p>
+            <p className="text-xs text-white/60 leading-relaxed">
+              Use headphones for the best immersive healing experience
             </p>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };

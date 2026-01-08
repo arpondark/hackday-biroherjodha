@@ -12,7 +12,7 @@ const emotionSchema = new mongoose.Schema({
   },
   pattern: { 
     type: String, 
-    enum: ['waves', 'particles', 'spirals', 'ripples', 'circles', 'flow', 'pulse'], 
+    enum: ['waves', 'particles', 'spirals', 'ripples', 'circles', 'flow', 'pulse', 'draw', 'rhythm'], 
     required: true 
   },
   motionIntensity: { 

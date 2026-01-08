@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from './providers/AuthProvider';
@@ -15,7 +14,7 @@ function App() {
         <AuthProvider>
           <div className="h-screen w-screen flex overflow-hidden bg-background-darker">
             <Navbar />
-            <main className="flex-1 overflow-y-auto h-full scrollbar-hide">
+            <main className="flex-1 overflow-y-auto h-full">
               <AppRoutes />
               <Footer />
             </main>

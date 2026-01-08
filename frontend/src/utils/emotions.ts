@@ -16,8 +16,11 @@ export const emotionPatterns = [
   'circles',
   'spirals',
   'particles',
+  'ripples',
   'flow',
   'pulse',
+  'draw',
+  'rhythm',
 ] as const;
 
 export type PatternType = typeof emotionPatterns[number];
